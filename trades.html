@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trades</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1>صفحة الصفقات</h1>
+        <div class="nav">
+          <a class="navlink" href="./index.html">Dashboard</a>
+          <a class="navlink" href="./trades.html">Trades</a>
+        </div>
+      </div>
+      <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+    </div>
+
+    <div class="cards">
+      <div class="card"><div class="label">كل الصفقات</div><div id="t_total" class="value">-</div></div>
+      <div class="card"><div class="label">Win Rate</div><div id="t_wr" class="value">-</div></div>
+      <div class="card"><div class="label">أفضل صفقة</div><div id="t_best" class="value">-</div></div>
+      <div class="card"><div class="label">أسوأ صفقة</div><div id="t_worst" class="value">-</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>إضافة صفقة</h2>
+      <div class="row">
+        <input id="t_date" type="date" />
+        <input id="t_pair" placeholder="PAIR مثال: EURUSD" />
+        <select id="t_type">
+          <option>Buy</option>
+          <option>Sell</option>
+        </select>
+        <input id="t_size" type="number" step="0.01" placeholder="Size (lot)" />
+        <input id="t_result" type="number" step="0.01" placeholder="Result $ (+/-)" />
+        <input id="t_pips" type="number" step="0.1" placeholder="Pips (اختياري)" />
+        <input id="t_notes" placeholder="Notes (اختياري)" />
+        <button id="t_add" class="btn">إضافة</button>
+        <button id="t_export" class="btn">تصدير CSV</button>
+        <button id="t_clear" class="btn danger">تصفير الصفقات</button>
+      </div>
+      <small class="hint">أهم شيء: التاريخ + الزوج + النتيجة بالدولار.</small>
+    </div>
+
+    <div class="panel">
+      <h2>منحنى نتائج الصفقات</h2>
+      <div class="chartWrapSm">
+        <canvas id="tradeCurve"></canvas>
+      </div>
+      <small class="hint">تطور الربح/الخسارة عبر الصفقات (Cumulative).</small>
+    </div>
+
+    <div class="panel">
+      <h2>قائمة الصفقات</h2>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>PAIR</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Result</th>
+              <th>Pips</th>
+              <th>Notes</th>
+              <th>حذف</th>
+            </tr>
+          </thead>
+          <tbody id="t_table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>نصائح (من الصفقات)</h2>
+      <ul id="t_tips"></ul>
+      <small class="hint">معلومات تعليمية وليست نصيحة مالية.</small>
+    </div>
+  </div>
+
+  <script src="trades.js"></script>
+</body>
+                </html>
