@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forex Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>لوحة تتبع حساب الفوركس</h1>
+
+    <div class="cards">
+      <div class="card"><div class="label">الرصيد الحالي</div><div id="equity" class="value">-</div></div>
+      <div class="card"><div class="label">صافي الربح</div><div id="net" class="value">-</div></div>
+      <div class="card"><div class="label">Win Rate</div><div id="winrate" class="value">-</div></div>
+      <div class="card"><div class="label">Max Drawdown</div><div id="dd" class="value">-</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>إضافة نتيجة يوم</h2>
+      <div class="row">
+        <input id="date" type="date" />
+        <input id="pl" type="number" step="0.01" placeholder="Daily P/L $" />
+        <button id="addDay">إضافة</button>
+        <button id="reset">تصفير البيانات</button>
+      </div>
+      <small class="hint">تقدر تكتب رقم موجب للربح وسالب للخسارة.</small>
+    </div>
+
+    <div class="panel">
+      <h2>الرسم البياني (Equity Curve)</h2>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>السجل اليومي</h2>
+      <table>
+        <thead>
+          <tr><th>التاريخ</th><th>Daily P/L</th><th>الرصيد</th><th></th></tr>
+        </thead>
+        <tbody id="table"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="tipsBox">
+      <h2>نصائح</h2>
+      <ul id="tips"></ul>
+      <small class="hint">هذه معلومات تعليمية وليست نصيحة مالية.</small>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
