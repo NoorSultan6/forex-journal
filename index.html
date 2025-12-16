@@ -3,14 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لوحة تتبع حساب الفوركس</title>
+  <title>Forex Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
   <div class="container">
-    <h1>لوحة تتبع حساب الفوركس</h1>
+    <div class="topbar">
+      <div class="brand">
+        <h1>لوحة تتبع حساب الفوركس</h1>
+        <div class="nav">
+          <a class="navlink" href="./index.html">Dashboard</a>
+          <a class="navlink" href="./trades.html">Trades</a>
+        </div>
+      </div>
+      <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+    </div>
 
     <div class="cards">
       <div class="card">
@@ -24,7 +33,7 @@
       </div>
 
       <div class="card">
-        <div class="label">Win Rate</div>
+        <div class="label">Win Rate (Days)</div>
         <div id="winrate" class="value">-</div>
       </div>
 
@@ -34,52 +43,91 @@
       </div>
     </div>
 
-    <!-- Initial Balance -->
     <div class="panel">
       <h2>الرصيد الابتدائي</h2>
       <div class="row">
         <input id="initialBalanceInput" type="number" step="0.01" placeholder="مثال: 46000" />
-        <button id="saveInitial">حفظ</button>
-        <button id="clearData">تصفير كل البيانات</button>
+        <button id="saveInitial" class="btn">حفظ</button>
+        <button id="clearData" class="btn danger">تصفير كل البيانات</button>
       </div>
-      <small class="hint">بعد تغيير الرصيد الابتدائي سيتم إعادة حساب كل شيء.</small>
+      <small class="hint">سيتم إعادة حساب كل شيء حسب الرصيد الابتدائي.</small>
     </div>
 
-    <!-- Add Day -->
     <div class="panel">
       <h2>إضافة نتيجة يوم</h2>
       <div class="row">
         <input id="date" type="date" />
         <input id="pl" type="number" step="0.01" placeholder="Daily P/L $" />
-        <button id="addDay">إضافة</button>
-        <button id="exportCsv">تصدير CSV</button>
+        <button id="addDay" class="btn">إضافة</button>
+        <button id="exportCsv" class="btn">تصدير CSV</button>
       </div>
       <small class="hint">اكتب رقم موجب للربح وسالب للخسارة.</small>
     </div>
 
-    <!-- Chart -->
     <div class="panel">
       <h2>الرسم البياني (Equity Curve)</h2>
-      <canvas id="chart"></canvas>
+      <div class="chartWrap">
+        <canvas id="equityChart"></canvas>
+      </div>
+      <small class="hint">مرّر على الخط (Hover) لرؤية الرصيد لكل يوم.</small>
     </div>
 
-    <!-- Table -->
+    <div class="panel">
+      <h2>الرسم البياني (Drawdown)</h2>
+      <div class="chartWrapSm">
+        <canvas id="ddChart"></canvas>
+      </div>
+      <small class="hint">الـ Drawdown يظهر الهبوط من أعلى قمة (Peak).</small>
+    </div>
+
+    <div class="panel">
+      <h2>النتائج الشهرية</h2>
+      <div class="row">
+        <div class="miniCard">
+          <div class="label">أفضل شهر</div>
+          <div id="bestMonth" class="value">-</div>
+        </div>
+        <div class="miniCard">
+          <div class="label">أسوأ شهر</div>
+          <div id="worstMonth" class="value">-</div>
+        </div>
+        <div class="miniCard">
+          <div class="label">إجمالي آخر 3 أشهر</div>
+          <div id="last3" class="value">-</div>
+        </div>
+      </div>
+
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الشهر</th>
+              <th>إجمالي الربح/الخسارة</th>
+              <th>عدد الأيام</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyTable"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="panel">
       <h2>السجل اليومي</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>التاريخ</th>
-            <th>Daily P/L</th>
-            <th>الرصيد</th>
-            <th>حذف</th>
-          </tr>
-        </thead>
-        <tbody id="table"></tbody>
-      </table>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>Daily P/L</th>
+              <th>الرصيد</th>
+              <th>حذف</th>
+            </tr>
+          </thead>
+          <tbody id="table"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Tips -->
     <div class="panel">
       <h2>نصائح</h2>
       <ul id="tips"></ul>
