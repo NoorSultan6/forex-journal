@@ -1,4 +1,4 @@
-// ===== Storage Keys =====
+// ===== Keys =====
 const LOGS_KEY = "fx_logs_v3";
 const BAL_KEY  = "startingBalance";
 const THEME_KEY = "fx_theme";
@@ -13,25 +13,21 @@ function loadLogs(){
   try { return JSON.parse(localStorage.getItem(LOGS_KEY) || "[]"); }
   catch { return []; }
 }
-
 function saveLogs(logs){
   localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
 }
-
-function sortByDate(a,b){
-  return new Date(a.date) - new Date(b.date);
-}
+function sortByDate(a,b){ return new Date(a.date) - new Date(b.date); }
 
 function fmtMoney(n){
   const sign = n >= 0 ? "+" : "";
   return `${sign}$${Number(n).toFixed(2)}`;
 }
 
-function calcWinRateDays(logs){
-  if(!logs.length) return 0;
-  const wins = logs.filter(x => Number(x.pl) > 0).length;
-  return wins / logs.length;
+function applyTheme(){
+  const t = localStorage.getItem(THEME_KEY) || "dark";
+  document.body.classList.toggle("light", t === "light");
 }
+applyTheme();
 
 // equity curve from daily logs
 function computeCurve(logs){
@@ -51,11 +47,15 @@ function computeDrawdown(curve){
     return { date: p.date, dd: p.equity - peak }; // <= 0
   });
 }
-
 function calcMaxDrawdown(ddSeries){
   let m = 0;
   for(const p of ddSeries) m = Math.min(m, p.dd);
   return m;
+}
+function calcWinRateDays(logs){
+  if(!logs.length) return 0;
+  const wins = logs.filter(x => Number(x.pl) > 0).length;
+  return wins / logs.length;
 }
 
 // monthly aggregation from daily logs
@@ -63,23 +63,15 @@ function computeMonthly(logs){
   const map = new Map();
   for(const x of logs){
     if(!x.date) continue;
-    const ym = x.date.slice(0,7); // YYYY-MM
+    const ym = x.date.slice(0,7);
     const pl = Number(x.pl||0);
     const prev = map.get(ym) || { sum:0, count:0 };
     map.set(ym, { sum: prev.sum + pl, count: prev.count + 1 });
   }
-  const rows = [...map.entries()]
+  return [...map.entries()]
     .map(([ym, v]) => ({ ym, ...v }))
     .sort((a,b)=> a.ym.localeCompare(b.ym));
-  return rows;
 }
-
-// ===== Theme =====
-function applyTheme(){
-  const t = localStorage.getItem(THEME_KEY) || "dark";
-  document.body.classList.toggle("light", t === "light");
-}
-applyTheme();
 
 // ===== Charts =====
 let equityChart, ddChart;
@@ -89,14 +81,11 @@ function renderCharts(curve, ddSeries){
   const values = curve.map(x=>x.equity);
   const start = getStartingBalance();
   const last = values.length ? values[values.length-1] : start;
-
-  // color based on performance
   const up = last >= start;
 
-  // baseline (starting balance)
   const baseline = labels.map(()=> start);
 
-  // Equity chart
+  // equity chart
   const ctx1 = document.getElementById("equityChart");
   if(equityChart) equityChart.destroy();
 
@@ -113,7 +102,6 @@ function renderCharts(curve, ddSeries){
           pointHoverRadius: 6,
           borderWidth: 3,
           fill: true,
-          // dynamic gradient fill in runtime:
           backgroundColor: (context) => {
             const chart = context.chart;
             const {ctx, chartArea} = chart;
@@ -148,26 +136,19 @@ function renderCharts(curve, ddSeries){
       plugins: {
         legend: { display: false },
         tooltip: {
-          callbacks: {
-            label: (ctx) => ` $${Number(ctx.raw).toFixed(2)}`
-          }
+          callbacks: { label: (ctx) => ` $${Number(ctx.raw).toFixed(2)}` }
         }
       },
       scales: {
         x: { grid: { display: false } },
-        y: {
-          ticks: { callback: (v) => `$${v}` },
-          grid: { borderDash: [6,6] }
-        }
+        y: { ticks: { callback: (v) => `$${v}` }, grid: { borderDash: [6,6] } }
       }
     }
   });
 
-  // Drawdown chart
+  // drawdown chart
   const ctx2 = document.getElementById("ddChart");
   if(ddChart) ddChart.destroy();
-
-  const ddVals = ddSeries.map(x=>x.dd);
 
   ddChart = new Chart(ctx2, {
     type: "line",
@@ -175,7 +156,7 @@ function renderCharts(curve, ddSeries){
       labels,
       datasets: [{
         label: "Drawdown",
-        data: ddVals,
+        data: ddSeries.map(x=>x.dd),
         tension: 0.25,
         pointRadius: 0,
         borderWidth: 2,
@@ -188,12 +169,7 @@ function renderCharts(curve, ddSeries){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: { label: (ctx) => ` ${Number(ctx.raw).toFixed(2)}` }
-        }
-      },
+      plugins: { legend: { display: false } },
       scales: {
         x: { grid: { display: false } },
         y: { grid: { borderDash: [6,6] } }
@@ -202,7 +178,7 @@ function renderCharts(curve, ddSeries){
   });
 }
 
-// ===== Main Render =====
+// ===== Render =====
 function render(){
   const logs = loadLogs();
   const curve = computeCurve(logs);
@@ -212,7 +188,6 @@ function render(){
   const lastEquity = curve.length ? curve[curve.length-1].equity : start;
   const net = lastEquity - start;
 
-  // cards
   document.getElementById("equity").textContent = `$${lastEquity.toFixed(2)}`;
   const netEl = document.getElementById("net");
   netEl.textContent = fmtMoney(net);
@@ -226,7 +201,7 @@ function render(){
   ddEl.textContent = `$${maxDD.toFixed(2)}`;
   ddEl.className = "value " + (maxDD < 0 ? "bad" : "good");
 
-  // table
+  // daily table
   const tbody = document.getElementById("table");
   tbody.innerHTML = "";
   const desc = [...curve].sort((a,b)=> new Date(b.date) - new Date(a.date));
@@ -261,11 +236,7 @@ function render(){
   monthly.forEach(m=>{
     const tr = document.createElement("tr");
     const cls = m.sum >= 0 ? "good" : "bad";
-    tr.innerHTML = `
-      <td>${m.ym}</td>
-      <td class="${cls}">${fmtMoney(m.sum)}</td>
-      <td>${m.count}</td>
-    `;
+    tr.innerHTML = `<td>${m.ym}</td><td class="${cls}">${fmtMoney(m.sum)}</td><td>${m.count}</td>`;
     mBody.appendChild(tr);
   });
 
@@ -274,7 +245,6 @@ function render(){
     const worst = monthly.reduce((a,b)=> (b.sum<a.sum?b:a), monthly[0]);
     document.getElementById("bestMonth").textContent = `${best.ym} (${fmtMoney(best.sum)})`;
     document.getElementById("worstMonth").textContent = `${worst.ym} (${fmtMoney(worst.sum)})`;
-
     const last3 = monthly.slice(-3).reduce((s,x)=> s + x.sum, 0);
     document.getElementById("last3").textContent = fmtMoney(last3);
   } else {
