@@ -74,7 +74,7 @@ body.light{
   align-items:center;
 }
 
-input,button{
+input,select,button{
   padding:10px 12px;
   border-radius:10px;
   border:1px solid color-mix(in oklab, var(--border), #000 10%);
@@ -117,6 +117,7 @@ input,button{
 
 .chartWrap{ height:460px; }
 .chartWrapSm{ height:220px; }
+
 @media (max-width:900px){
   .cards{ grid-template-columns:repeat(2,1fr); }
   .chartWrap{ height:340px; }
