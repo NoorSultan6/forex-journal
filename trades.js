@@ -1,5 +1,6 @@
-const TRADES_KEY = "fx_trades_v1";
-const THEME_KEY = "fx_theme";
+const TRADES_KEY = "fx_trades_v2";
+const STRAT_KEY  = "fx_strategies_v2";
+const THEME_KEY  = "fx_theme";
 
 function applyTheme(){
   const t = localStorage.getItem(THEME_KEY) || "dark";
@@ -19,10 +20,67 @@ function loadTrades(){
   catch { return []; }
 }
 function saveTrades(t){ localStorage.setItem(TRADES_KEY, JSON.stringify(t)); }
+
+function loadStrats(){
+  try { return JSON.parse(localStorage.getItem(STRAT_KEY) || "[]"); }
+  catch { return []; }
+}
+function saveStrats(a){ localStorage.setItem(STRAT_KEY, JSON.stringify(a)); }
+
 function sortByDate(a,b){ return new Date(a.date) - new Date(b.date); }
 function money(n){ const s=n>=0?"+":""; return `${s}$${Number(n).toFixed(2)}`; }
 
-let curveChart;
+function ensureStrategyByName(name){
+  const n = (name||"").trim();
+  if(!n) return null;
+  const arr = loadStrats();
+  let s = arr.find(x => (x.name||"").toLowerCase() === n.toLowerCase());
+  if(!s){
+    s = { id:`${Date.now()}_${Math.random().toString(16).slice(2)}`, name:n, trades:0, tp1:0, tp2:0, be:0, sl:0, notes:"" };
+    arr.push(s);
+    saveStrats(arr);
+  }
+  return s;
+}
+
+function incStrategyOutcome(strategyName, outcome){
+  if(!strategyName) return;
+  const arr = loadStrats();
+  const s = arr.find(x => (x.name||"").toLowerCase() === strategyName.toLowerCase());
+  if(!s) return;
+
+  s.trades = Number(s.trades||0) + 1;
+  if(outcome === "TP1") s.tp1 = Number(s.tp1||0) + 1;
+  if(outcome === "TP2") s.tp2 = Number(s.tp2||0) + 1;
+  if(outcome === "BE")  s.be  = Number(s.be||0) + 1;
+  if(outcome === "SL")  s.sl  = Number(s.sl||0) + 1;
+
+  saveStrats(arr);
+}
+
+function decStrategyOutcome(strategyName, outcome){
+  if(!strategyName) return;
+  const arr = loadStrats();
+  const s = arr.find(x => (x.name||"").toLowerCase() === strategyName.toLowerCase());
+  if(!s) return;
+
+  const dec = (k) => s[k] = Math.max(0, Number(s[k]||0) - 1);
+  dec("trades");
+  if(outcome === "TP1") dec("tp1");
+  if(outcome === "TP2") dec("tp2");
+  if(outcome === "BE")  dec("be");
+  if(outcome === "SL")  dec("sl");
+
+  saveStrats(arr);
+}
+
+function fillStrategyDropdown(){
+  const sel = document.getElementById("t_strategy");
+  const current = sel.value;
+  const arr = loadStrats().sort((a,b)=> (a.name||"").localeCompare(b.name||""));
+  sel.innerHTML = `<option value="">Strategy (اختياري)</option>` + arr.map(s=>`<option value="${s.name}">${s.name}</option>`).join("");
+  if(current) sel.value = current;
+}
 
 function stats(trades){
   const total = trades.length;
@@ -44,7 +102,11 @@ function stats(trades){
   return { total, winRate, best, worst, profitFactor, expectancy };
 }
 
+let curveChart;
+
 function render(){
+  fillStrategyDropdown();
+
   const trades = loadTrades().sort(sortByDate);
 
   const s = stats(trades);
@@ -64,11 +126,13 @@ function render(){
       <td>${t.date||""}</td>
       <td>${(t.pair||"").toUpperCase()}</td>
       <td>${t.type||""}</td>
+      <td>${t.strategy || ""}</td>
+      <td>${t.outcome || ""}</td>
       <td>${t.size ?? ""}</td>
       <td class="${cls}">${money(Number(t.result||0))}</td>
       <td>${t.pips ?? ""}</td>
       <td>${t.notes ?? ""}</td>
-      <td><button class="btn" data-id="${t.id}">حذف</button></td>
+      <td><button class="btn danger" data-id="${t.id}">حذف</button></td>
     `;
     tb.appendChild(tr);
   });
@@ -76,8 +140,16 @@ function render(){
   tb.querySelectorAll("button").forEach(btn=>{
     btn.onclick = () => {
       const id = btn.getAttribute("data-id");
-      const next = loadTrades().filter(x=> x.id !== id);
+      const all = loadTrades();
+      const found = all.find(x => x.id === id);
+      const next = all.filter(x=> x.id !== id);
       saveTrades(next);
+
+      // rollback strategy counters if linked
+      if(found?.strategy && found?.outcome){
+        decStrategyOutcome(found.strategy, found.outcome);
+      }
+
       render();
     };
   });
@@ -113,6 +185,8 @@ document.getElementById("t_add").onclick = () => {
   const date = document.getElementById("t_date").value;
   const pair = document.getElementById("t_pair").value.trim();
   const type = document.getElementById("t_type").value;
+  const strategy = document.getElementById("t_strategy").value || "";
+  const outcome = document.getElementById("t_outcome").value;
   const size = Number(document.getElementById("t_size").value || 0);
   const result = Number(document.getElementById("t_result").value);
   const pips = document.getElementById("t_pips").value;
@@ -120,16 +194,24 @@ document.getElementById("t_add").onclick = () => {
 
   if(!date || !pair || Number.isNaN(result)) return alert("اكتب التاريخ + الزوج + Result $");
 
+  // if user typed a new strategy name manually (optional future), ensure exists:
+  if(strategy) ensureStrategyByName(strategy);
+
   const trades = loadTrades();
   trades.push({
     id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
     date, pair, type,
+    strategy,
+    outcome,
     size: size || "",
     result,
     pips: pips ? Number(pips) : "",
     notes
   });
   saveTrades(trades);
+
+  // update strategy counters
+  if(strategy && outcome) incStrategyOutcome(strategy, outcome);
 
   document.getElementById("t_result").value = "";
   document.getElementById("t_notes").value = "";
@@ -145,8 +227,18 @@ document.getElementById("t_clear").onclick = () => {
 
 document.getElementById("t_export").onclick = () => {
   const trades = loadTrades().sort(sortByDate);
-  const rows = [["date","pair","type","size","result","pips","notes"]];
-  trades.forEach(t => rows.push([t.date, (t.pair||"").toUpperCase(), t.type, t.size, t.result, t.pips, (t.notes||"").replaceAll(",", " ")]));
+  const rows = [["date","pair","type","strategy","outcome","size","result","pips","notes"]];
+  trades.forEach(t => rows.push([
+    t.date,
+    (t.pair||"").toUpperCase(),
+    t.type,
+    t.strategy || "",
+    t.outcome || "",
+    t.size,
+    t.result,
+    t.pips,
+    (t.notes||"").replaceAll(",", " ")
+  ]));
   const csv = rows.map(r => r.join(",")).join("\n");
   const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
