@@ -16,6 +16,7 @@
         <div class="nav">
           <a class="navlink" href="./index.html">Dashboard</a>
           <a class="navlink" href="./trades.html">Trades</a>
+          <a class="navlink" href="./strategies.html">الاستراتيجيات</a>
         </div>
       </div>
       <button id="toggleTheme" class="btn">☀️ / 🌙</button>
@@ -37,15 +38,28 @@
           <option>Buy</option>
           <option>Sell</option>
         </select>
+
+        <select id="t_strategy">
+          <option value="">Strategy (اختياري)</option>
+        </select>
+
+        <select id="t_outcome">
+          <option value="TP1">TP1</option>
+          <option value="TP2">TP2</option>
+          <option value="BE">BE</option>
+          <option value="SL">SL</option>
+        </select>
+
         <input id="t_size" type="number" step="0.01" placeholder="Size (lot)" />
         <input id="t_result" type="number" step="0.01" placeholder="Result $ (+/-)" />
         <input id="t_pips" type="number" step="0.1" placeholder="Pips (اختياري)" />
         <input id="t_notes" placeholder="Notes (اختياري)" />
+
         <button id="t_add" class="btn">إضافة</button>
         <button id="t_export" class="btn">تصدير CSV</button>
         <button id="t_clear" class="btn danger">تصفير الصفقات</button>
       </div>
-      <small class="hint">أهم شيء: التاريخ + الزوج + النتيجة بالدولار.</small>
+      <small class="hint">إذا اخترت Strategy + Outcome، راح يحدّث أرقام الاستراتيجية تلقائيًا.</small>
     </div>
 
     <div class="panel">
@@ -65,6 +79,8 @@
               <th>التاريخ</th>
               <th>PAIR</th>
               <th>Type</th>
+              <th>Strategy</th>
+              <th>Outcome</th>
               <th>Size</th>
               <th>Result</th>
               <th>Pips</th>
@@ -86,4 +102,4 @@
 
   <script src="trades.js"></script>
 </body>
-                </html>
+</html>
