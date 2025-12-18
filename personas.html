@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Personas - Trader A vs B</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="nav" href="index.html">Dashboard</a>
+    <a class="nav" href="trades.html">Trades</a>
+    <a class="nav" href="strategies.html">Strategies</a>
+    <a class="nav" href="coach.html">Coach</a>
+    <a class="nav active" href="personas.html">Personas</a>
+  </header>
+
+  <main class="container">
+    <h1>Personas (Trader A vs Trader B)</h1>
+    <p class="muted">تقسيم صفقاتك حسب جودة القرار (وليس الربح/الخسارة).</p>
+
+    <section class="grid2">
+      <div class="card">
+        <h2>Trader A (منضبط)</h2>
+        <div id="aStats" class="stats"></div>
+      </div>
+      <div class="card">
+        <h2>Trader B (عاطفي)</h2>
+        <div id="bStats" class="stats"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>الفرق (A - B)</h2>
+      <div id="diffStats" class="stats"></div>
+      <p class="muted">نصيحة: قيّم صفقاتك من صفحة Coach حتى يكون التقسيم أدق.</p>
+    </section>
+  </main>
+
+  <script src="personas.js"></script>
+</body>
+</html>
