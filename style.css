@@ -5,6 +5,7 @@
   --text:#e5e7eb;
   --muted:#9ca3af;
   --btn:#0b1220;
+  --pill:#0e1630;
 }
 
 body{
@@ -14,7 +15,7 @@ body{
   margin:0;
 }
 
-/* Light mode */
+/* Light mode (يعتمد على body.light مثل مشروعك) */
 body.light{
   --bg:#f6f7fb;
   --panel:#ffffff;
@@ -22,6 +23,7 @@ body.light{
   --text:#111827;
   --muted:#6b7280;
   --btn:#ffffff;
+  --pill:#f2f2f2;
 }
 
 .container{
@@ -30,35 +32,55 @@ body.light{
   padding:16px;
 }
 
+/* ✅ HEADER موحّد لكل الصفحات */
 .topbar{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.brand h1{
-  margin:6px 0 6px;
-  font-size:26px;
+  gap:12px;
+  padding:12px 16px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .nav{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  align-items:center;
 }
 
+/* ✅ زر/رابط المنيو (نخلي navlink و nav نفس الشكل) */
+.navlink,
+.nav{
+  /* ملاحظة: .nav أعلاه container، هنا ما نغيره - لذلك نستخدم .nav a */
+}
+
+.nav a,
 .navlink{
   color:var(--muted);
   text-decoration:none;
   border:1px solid var(--border);
-  padding:6px 10px;
-  border-radius:10px;
+  padding:8px 12px;
+  border-radius:12px;
   background:transparent;
+  font-weight:700;
 }
-.navlink:hover{ opacity:.9; }
 
+.nav a:hover,
+.navlink:hover{ opacity:.92; }
+
+/* عنوان الصفحة */
+.pageTitle{
+  font-size:34px;
+  font-weight:900;
+  margin:18px 0 12px;
+}
+
+/* Panels / Cards */
 .panel{
   background:var(--panel);
   border:1px solid var(--border);
@@ -66,25 +88,6 @@ body.light{
   padding:14px;
   margin:14px 0;
 }
-
-.row{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-
-input,select,button{
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid color-mix(in oklab, var(--border), #000 10%);
-  background:var(--btn);
-  color:var(--text);
-}
-
-.btn{ cursor:pointer; }
-.btn:hover{ opacity:.92; }
-.danger{ border-color:#ef4444; }
 
 .cards{
   display:grid;
@@ -109,12 +112,40 @@ input,select,button{
 }
 
 .label{ color:var(--muted); font-size:12px; }
-.value{ font-size:20px; font-weight:800; margin-top:6px; }
+.value{ font-size:20px; font-weight:900; margin-top:6px; }
 .hint{ color:var(--muted); }
+.muted{ color:var(--muted); }
 
 .good{ color:#22c55e; }
 .bad{ color:#ef4444; }
 
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+input,select,button,textarea{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid color-mix(in oklab, var(--border), #000 10%);
+  background:var(--btn);
+  color:var(--text);
+}
+
+textarea{ width:100%; }
+
+.btn{
+  cursor:pointer;
+  font-weight:800;
+}
+
+.btn:hover{ opacity:.92; }
+
+.danger{ border-color:#ef4444; }
+
+/* Charts */
 .chartWrap{ height:460px; }
 .chartWrapSm{ height:220px; }
 
@@ -124,6 +155,7 @@ input,select,button{
   .chartWrapSm{ height:200px; }
 }
 
+/* Tables */
 .tableWrap{ overflow:auto; }
 
 table{
@@ -139,24 +171,49 @@ th,td{
   font-size:14px;
 }
 
-.container { max-width: 980px; margin: 0 auto; padding: 16px; }
-.topbar { display:flex; gap:10px; padding:12px 16px; background:#111; position:sticky; top:0; }
-.nav { color:#ddd; text-decoration:none; padding:8px 10px; border-radius:8px; }
-.nav.active { background:#2a2a2a; color:#fff; }
-.card { background:#151515; color:#fff; border:1px solid #2a2a2a; border-radius:14px; padding:14px; margin-top:14px; }
-.muted { color:#aaa; }
-.input { width:100%; padding:10px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; }
-.textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; margin-top:10px; }
-.grid2 { display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
+/* ====== Coach/Personas UI (منسجم مع ألوان المشروع) ====== */
+.grid2{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
 @media(min-width:768px){ .grid2{ grid-template-columns:1fr 1fr; } }
-.toggle { padding:12px; border-radius:12px; border:1px solid #333; background:#0f0f0f; color:#fff; text-align:right; }
-.toggle.on { outline:2px solid #2d6cdf; }
-.toggle.danger { border-color:#552; }
-.pillRow { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-.pill { background:#0f0f0f; border:1px solid #333; padding:6px 10px; border-radius:999px; color:#ddd; font-size:13px; }
-.row { display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:12px; flex-wrap:wrap; }
-.btn { background:#fff; color:#000; border:none; padding:10px 14px; border-radius:12px; font-weight:700; }
-.scoreBox { background:#0f0f0f; border:1px solid #333; padding:10px 12px; border-radius:12px; color:#fff; }
-.verdict { margin-top:10px; padding:10px; border-radius:12px; background:#0f0f0f; border:1px solid #333; color:#ddd; }
-.stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-body { background:#0b0b0b; color:#fff; }
+
+.toggle{
+  padding:12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--btn);
+  color:var(--text);
+  text-align:right;
+  cursor:pointer;
+  font-weight:800;
+}
+.toggle.on{ outline:2px solid #2d6cdf; }
+.toggle.danger{ border-color:color-mix(in oklab, #ef4444, var(--border) 40%); }
+
+.pillRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.pill{
+  background:var(--pill);
+  border:1px solid var(--border);
+  padding:6px 10px;
+  border-radius:999px;
+  color:var(--text);
+  font-size:13px;
+}
+
+.scoreBox{
+  background:var(--pill);
+  border:1px solid var(--border);
+  padding:10px 12px;
+  border-radius:12px;
+  color:var(--text);
+  font-weight:900;
+}
+
+.verdict{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:var(--pill);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.stats{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
