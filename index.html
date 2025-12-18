@@ -9,24 +9,20 @@
 </head>
 
 <body>
-  <div class="container">
-
-    <!-- ✅ TOPBAR (محدث: أضفنا Coach + Personas) -->
-    <div class="topbar">
-      <div class="brand">
-        <h1>لوحة تتبع حساب الفوركس</h1>
-
-        <div class="nav">
-          <a class="navlink" href="./index.html">Dashboard</a>
-          <a class="navlink" href="./trades.html">Trades</a>
-          <a class="navlink" href="./strategies.html">الاستراتيجيات</a>
-          <a class="navlink" href="./coach.html">Coach</a>
-          <a class="navlink" href="./personas.html">Personas</a>
-        </div>
-      </div>
-
-      <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+  <!-- HEADER -->
+  <header class="topbar">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <a class="nav" href="./index.html">Dashboard</a>
+      <a class="nav" href="./trades.html">Trades</a>
+      <a class="nav" href="./strategies.html">Strategies</a>
+      <a class="nav" href="./coach.html">Coach</a>
+      <a class="nav" href="./personas.html">Personas</a>
     </div>
+    <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+  </header>
+
+  <main class="container">
+    <h1 class="pageTitle">لوحة تتبع حساب الفوركس</h1>
 
     <div class="cards">
       <div class="card"><div class="label">الرصيد الحالي</div><div id="equity" class="value">-</div></div>
@@ -61,30 +57,12 @@
       <div class="chartWrap">
         <canvas id="equityChart"></canvas>
       </div>
-      <small class="hint">مرّر على الخط لرؤية الرصيد لكل يوم.</small>
     </div>
 
     <div class="panel">
       <h2>الرسم البياني (Drawdown)</h2>
       <div class="chartWrapSm">
         <canvas id="ddChart"></canvas>
-      </div>
-      <small class="hint">الـ Drawdown = الهبوط من أعلى قمة (Peak).</small>
-    </div>
-
-    <div class="panel">
-      <h2>النتائج الشهرية</h2>
-      <div class="row">
-        <div class="miniCard"><div class="label">أفضل شهر</div><div id="bestMonth" class="value">-</div></div>
-        <div class="miniCard"><div class="label">أسوأ شهر</div><div id="worstMonth" class="value">-</div></div>
-        <div class="miniCard"><div class="label">إجمالي آخر 3 أشهر</div><div id="last3" class="value">-</div></div>
-      </div>
-
-      <div class="tableWrap">
-        <table>
-          <thead><tr><th>الشهر</th><th>إجمالي الربح/الخسارة</th><th>عدد الأيام</th></tr></thead>
-          <tbody id="monthlyTable"></tbody>
-        </table>
       </div>
     </div>
 
@@ -97,14 +75,7 @@
         </table>
       </div>
     </div>
-
-    <div class="panel">
-      <h2>نصائح</h2>
-      <ul id="tips"></ul>
-      <small class="hint">هذه معلومات تعليمية وليست نصيحة مالية.</small>
-    </div>
-
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>
