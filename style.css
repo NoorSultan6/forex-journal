@@ -138,3 +138,25 @@ th,td{
   text-align:right;
   font-size:14px;
 }
+
+.container { max-width: 980px; margin: 0 auto; padding: 16px; }
+.topbar { display:flex; gap:10px; padding:12px 16px; background:#111; position:sticky; top:0; }
+.nav { color:#ddd; text-decoration:none; padding:8px 10px; border-radius:8px; }
+.nav.active { background:#2a2a2a; color:#fff; }
+.card { background:#151515; color:#fff; border:1px solid #2a2a2a; border-radius:14px; padding:14px; margin-top:14px; }
+.muted { color:#aaa; }
+.input { width:100%; padding:10px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; }
+.textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; margin-top:10px; }
+.grid2 { display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
+@media(min-width:768px){ .grid2{ grid-template-columns:1fr 1fr; } }
+.toggle { padding:12px; border-radius:12px; border:1px solid #333; background:#0f0f0f; color:#fff; text-align:right; }
+.toggle.on { outline:2px solid #2d6cdf; }
+.toggle.danger { border-color:#552; }
+.pillRow { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.pill { background:#0f0f0f; border:1px solid #333; padding:6px 10px; border-radius:999px; color:#ddd; font-size:13px; }
+.row { display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:12px; flex-wrap:wrap; }
+.btn { background:#fff; color:#000; border:none; padding:10px 14px; border-radius:12px; font-weight:700; }
+.scoreBox { background:#0f0f0f; border:1px solid #333; padding:10px 12px; border-radius:12px; color:#fff; }
+.verdict { margin-top:10px; padding:10px; border-radius:12px; background:#0f0f0f; border:1px solid #333; color:#ddd; }
+.stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+body { background:#0b0b0b; color:#fff; }
