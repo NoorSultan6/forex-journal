@@ -3,76 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>الاستراتيجيات</title>
+  <title>Strategies</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <div class="container">
-    <div class="topbar">
-      <div class="brand">
-        <h1>صفحة الاستراتيجيات</h1>
+  <header class="topbar">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <a class="nav" href="./index.html">Dashboard</a>
+      <a class="nav" href="./trades.html">Trades</a>
+      <a class="nav" href="./strategies.html">Strategies</a>
+      <a class="nav" href="./coach.html">Coach</a>
+      <a class="nav" href="./personas.html">Personas</a>
+    </div>
+    <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+  </header>
 
-        <!-- ✅ NAV (محدث: أضفنا Coach + Personas) -->
-        <div class="nav">
-          <a class="navlink" href="./index.html">Dashboard</a>
-          <a class="navlink" href="./trades.html">Trades</a>
-          <a class="navlink" href="./strategies.html">الاستراتيجيات</a>
-          <a class="navlink" href="./coach.html">Coach</a>
-          <a class="navlink" href="./personas.html">Personas</a>
-        </div>
-      </div>
+  <main class="container">
+    <h1 class="pageTitle">الاستراتيجيات</h1>
 
-      <button id="toggleTheme" class="btn">☀️ / 🌙</button>
+    <div class="panel">
+      <input id="s_name" placeholder="اسم الاستراتيجية" />
+      <button id="s_add" class="btn">حفظ</button>
+      <button id="s_clear" class="btn danger">تصفير</button>
     </div>
 
     <div class="panel">
-      <h2>إضافة / تحديث استراتيجية</h2>
-      <div class="row">
-        <input id="s_name" placeholder="اسم الاستراتيجية" />
-        <input id="s_trades" type="number" step="1" placeholder="عدد الصفقات" />
-        <input id="s_tp1" type="number" step="1" placeholder="جاب الهدف 1 (TP1)" />
-        <input id="s_tp2" type="number" step="1" placeholder="جاب الهدف 2 (TP2)" />
-        <input id="s_be"  type="number" step="1" placeholder="ضرب تأمين الدخول (BE)" />
-        <input id="s_sl"  type="number" step="1" placeholder="ضرب الستوب (SL)" />
-        <input id="s_notes" placeholder="ملاحظات (اختياري)" />
-        <button id="s_add" class="btn">حفظ</button>
-        <button id="s_clear" class="btn danger">تصفير الاستراتيجيات</button>
-      </div>
-      <small class="hint">
-        مهم: مجموع (TP1 + TP2 + BE + SL) لازم ≤ عدد الصفقات.
-        إذا كتبت اسم موجود راح يصير تحديث لنفس الاستراتيجية.
-      </small>
+      <table>
+        <thead><tr><th>الاستراتيجية</th><th>النتائج</th></tr></thead>
+        <tbody id="s_table"></tbody>
+      </table>
     </div>
-
-    <div class="panel">
-      <h2>قائمة الاستراتيجيات</h2>
-      <div class="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th>الاستراتيجية</th>
-              <th>Trades</th>
-              <th>TP1</th>
-              <th>TP2</th>
-              <th>BE</th>
-              <th>SL</th>
-              <th>معدلات</th>
-              <th>تحليل + نصيحة</th>
-              <th>تعديل/حذف</th>
-            </tr>
-          </thead>
-          <tbody id="s_table"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>الأفضلية (Top 3)</h2>
-      <div id="top3" class="row"></div>
-      <small class="hint">الترتيب يعتمد على TP2 وزن أعلى و SL خصم.</small>
-    </div>
-  </div>
+  </main>
 
   <script src="strategies.js"></script>
 </body>
