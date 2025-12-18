@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Coach - Decision Score</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="nav" href="index.html">Dashboard</a>
+    <a class="nav" href="trades.html">Trades</a>
+    <a class="nav" href="strategies.html">Strategies</a>
+    <a class="nav active" href="coach.html">Coach</a>
+    <a class="nav" href="personas.html">Personas</a>
+  </header>
+
+  <main class="container">
+    <h1>Coach (Decision Score)</h1>
+    <p class="muted">تقييم القرار قبل التفكير بالنتيجة. هذا ليس توصية تداول.</p>
+
+    <section class="card">
+      <label class="label">اختر صفقة:</label>
+      <select id="tradeSelect" class="input"></select>
+
+      <div id="tradeInfo" class="pillRow"></div>
+
+      <div class="grid2">
+        <button class="toggle" data-k="followedPlan">ضمن الخطة؟</button>
+        <button class="toggle" data-k="hadClearSetup">سبب واضح/Setup؟</button>
+        <button class="toggle" data-k="riskOk">المخاطرة منضبطة؟</button>
+        <button class="toggle" data-k="waitedForConfirmation">انتظرت تأكيد؟</button>
+
+        <button class="toggle danger" data-k="revengeTrade">انتقام بعد خسارة؟</button>
+        <button class="toggle danger" data-k="overtraded">Overtrading؟</button>
+      </div>
+
+      <div class="row">
+        <div class="scoreBox">Score: <span id="score">—</span>/10</div>
+        <button id="saveBtn" class="btn">حفظ التقييم</button>
+      </div>
+
+      <textarea id="notes" class="textarea" rows="3" placeholder="ملاحظات عن القرار..."></textarea>
+
+      <div id="verdict" class="verdict"></div>
+    </section>
+  </main>
+
+  <script src="coach.js"></script>
+</body>
+</html>
